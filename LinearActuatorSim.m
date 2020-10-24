@@ -5,7 +5,7 @@ axis1.originMass = 0;               %Mass of segment concentrated at base (kg)
 axis1.lengthMass = 3+4.2*0.453592;  %Mass of segment concentrated at midpoint (kg)
 axis1.AB_a = -0.55;                 %Actuator base anchor parallel offset (m)
 axis1.AB_r = -0.17;                  %Actuator base anchor perpendicular offset (m)
-axis1.AT_a = -0.075;                %Actuator tip anchor parallel offset (m)
+axis1.AT_a = -0.05;                %Actuator tip anchor parallel offset (m)
 axis1.AT_r = -0.17;                  %Actuator tip anchor perpendicular offset (m)
 axis1.angle = 0;                    % This and all remaining values are IK outputs
 axis1.B_x = 0;
@@ -74,7 +74,7 @@ arm = [axis1 axis2 axis3 payload];
 
 %% Variables
 % Angle limits (Length must equal number of non-payload axes)
-angleMins = [0,-140,-85];
+angleMins = [-15,-140,-85];
 angleMaxs = [90,-40,70];
 
 % Actuator Specs
@@ -244,8 +244,8 @@ end
 figure(1);
 hold on
 %[arm1,~] = forwardKinematics(arm, [angleMaxs(1) angleMins(2) 0]);
-%[arm1,~] = forwardKinematics(arm, (angleMaxs+angleMins)/2);
-%drawArm(arm1)
+% [arm1,~] = forwardKinematics(arm, (angleMaxs+angleMins)/2);
+% drawArm(arm1)
 [arm1,~] = forwardKinematics(arm, angleMaxs);
 drawArm(arm1)
 [arm1,~] = forwardKinematics(arm, angleMins);

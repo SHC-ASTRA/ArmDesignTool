@@ -1,4 +1,4 @@
-function [forces,moments] = calcActuatorForces(arm)
+function [forces,moments,jointForces] = calcActuatorForces(arm)
 linkCount = 0;
 for axis = arm
     if(axis.length ~= 0)
@@ -7,7 +7,7 @@ for axis = arm
 end
 
 for i = 1:linkCount
-    [forces(i),moments(i)] = calcActuatorForce(arm,i);
+    [forces(i),moments(i),jointForces(i)] = calcActuatorForce(arm,i);
 end
 
 end

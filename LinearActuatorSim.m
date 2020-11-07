@@ -147,6 +147,7 @@ end
 angle_list = angles';
 moment_list = zeros(length(angles),length(angleMins));
 force_list = zeros(length(angles),length(angleMins));
+joint_force_list = zeros(length(angles),length(angleMins));
 actLength_list = zeros(length(angles),length(angleMins));
 achievableAngle_list = zeros(length(angles),length(angleMins));
 endPosList = zeros(length(angles),2);
@@ -169,10 +170,11 @@ for angle = angles
     actLength_list(numSims,:) = actLengths;
 
     %moments = calcMoments(arm1);
-    [forces,moments] = calcActuatorForces(arm1);
+    [forces,moments,jointForces] = calcActuatorForces(arm1);
 
     moment_list(numSims,:) = moments;
     force_list(numSims,:) = forces;
+    joint_force_list(numSims,:) = jointForces;
    
     if max(abs(forces))<maxForce && ~checkIntersections(arm1)
         numAchievable = numAchievable + 1;
@@ -239,6 +241,7 @@ for i = 1:length(angleMins)
     %plot([angleMins(i) angleMaxs(i)],[-maxForce -maxForce],"r:");
     
     disp("Axis "+i+" max force = "+max(abs(force_list(:,i)))+" N ( "+(0.224809*max(abs(force_list(:,i))))+" lbf )")
+    disp("Axis "+i+" max joint force = "+max(abs(joint_force_list(:,i)))+" N ( "+(0.224809*max(abs(joint_force_list(:,i))))+" lbf )")
 end
 
 figure(1);

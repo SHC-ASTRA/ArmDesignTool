@@ -1,12 +1,13 @@
 %% Arm Definition
+scalefactor = 0.7;
 
-axis1.length = 0.8;                 %Length of segment (m)
+axis1.length = 0.8*scalefactor;                 %Length of segment (m)
 axis1.originMass = 0;               %Mass of segment concentrated at base (kg)
 axis1.lengthMass = 3+4.2*0.453592;  %Mass of segment concentrated at midpoint (kg)
-axis1.AB_a = -0.55;                 %Actuator base anchor parallel offset (m)
-axis1.AB_r = -0.17;                  %Actuator base anchor perpendicular offset (m)
-axis1.AT_a = -0.05;                %Actuator tip anchor parallel offset (m)
-axis1.AT_r = -0.17;                  %Actuator tip anchor perpendicular offset (m)
+axis1.AB_a = -0.55*scalefactor;                 %Actuator base anchor parallel offset (m)
+axis1.AB_r = -0.17*scalefactor;                  %Actuator base anchor perpendicular offset (m)
+axis1.AT_a = -0.05*scalefactor;                %Actuator tip anchor parallel offset (m)
+axis1.AT_r = -0.17*scalefactor;                  %Actuator tip anchor perpendicular offset (m)
 axis1.angle = 0;                    % This and all remaining values are IK outputs
 axis1.B_x = 0;
 axis1.B_y = 0;
@@ -17,13 +18,13 @@ axis1.AB_y = 0;
 axis1.AT_x = 0;
 axis1.AT_y = 0;
 
-axis2.length = 0.6;
+axis2.length = 0.6*scalefactor;
 axis2.originMass = 0;
 axis2.lengthMass = 3+4.2*0.453592;
-axis2.AB_a = 0.2;
-axis2.AB_r = 0.10;
-axis2.AT_a = 0.15;
-axis2.AT_r = -0.075;
+axis2.AB_a = 0.2*scalefactor;
+axis2.AB_r = 0.10*scalefactor;
+axis2.AT_a = 0.15*scalefactor;
+axis2.AT_r = -0.075*scalefactor;
 axis2.angle = 0;
 axis2.B_x = 0;
 axis2.B_y = 0;
@@ -34,13 +35,13 @@ axis2.AB_y = 0;
 axis2.AT_x = 0;
 axis2.AT_y = 0;
     
-axis3.length = 0.2;
+axis3.length = 0.2*scalefactor;
 axis3.originMass = 0;
 axis3.lengthMass = 3;
-axis3.AB_a = 0.1;
-axis3.AB_r = 0.1;
-axis3.AT_a = 0;
-axis3.AT_r = 0.1;
+axis3.AB_a = 0.1*scalefactor;
+axis3.AB_r = 0.1*scalefactor;
+axis3.AT_a = 0*scalefactor;
+axis3.AT_r = 0.1*scalefactor;
 axis3.angle = 0;
 axis3.B_x = 0;
 axis3.B_y = 0;
@@ -74,7 +75,7 @@ arm = [axis1 axis2 axis3 payload];
 
 %% Variables
 % Angle limits (Length must equal number of non-payload axes)
-angleMins = [-15,-140,-85];
+angleMins = [-15,-140,-70];
 angleMaxs = [90,-40,70];
 
 % Actuator Specs
@@ -82,7 +83,7 @@ angleMaxs = [90,-40,70];
 safetyFactor = 1.25;
 actuatorMaxForce = 330*4.44822; %Newtons
 maxForce = actuatorMaxForce/safetyFactor; %Newtons
-actuatorFixedLength = 5.71*0.0254; %Meters
+actuatorFixedLength = 4.53*0.0254; %Meters
 
 %Simulation mode (0 = Grid, 1 = Monte Carlo, 2 = Hybrid)
 mode = 2; 
@@ -249,10 +250,10 @@ hold on
 % [arm1,~] = forwardKinematics(arm, [angleMaxs(1) angleMins(2) -angleMaxs(1)-angleMins(2)-90]);
 [arm1,~] = forwardKinematics(arm, (angleMaxs+angleMins)/2);
 drawArm(arm1)
-% [arm1,~] = forwardKinematics(arm, angleMaxs);
-% drawArm(arm1)
-% [arm1,~] = forwardKinematics(arm, angleMins);
-% drawArm(arm1)
+[arm1,~] = forwardKinematics(arm, angleMaxs);
+drawArm(arm1)
+[arm1,~] = forwardKinematics(arm, angleMins);
+drawArm(arm1)
 j = boundary(endPosList,1);
 plot(endPosList(j,1),endPosList(j,2))
 

@@ -250,10 +250,10 @@ hold on
 % [arm1,~] = forwardKinematics(arm, [angleMaxs(1) angleMins(2) -angleMaxs(1)-angleMins(2)-90]);
 [arm1,~] = forwardKinematics(arm, (angleMaxs+angleMins)/2);
 drawArm(arm1)
-[arm1,~] = forwardKinematics(arm, angleMaxs);
-drawArm(arm1)
-[arm1,~] = forwardKinematics(arm, angleMins);
-drawArm(arm1)
+% [arm1,~] = forwardKinematics(arm, angleMaxs);
+% drawArm(arm1)
+% [arm1,~] = forwardKinematics(arm, angleMins);
+% drawArm(arm1)
 j = boundary(endPosList,1);
 plot(endPosList(j,1),endPosList(j,2))
 

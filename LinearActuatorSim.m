@@ -3,7 +3,7 @@ scalefactor = 0.7;
 
 axis1.length = 0.8*scalefactor;                 %Length of segment (m)
 axis1.originMass = 0;               %Mass of segment concentrated at base (kg)
-axis1.lengthMass = 3+4.2*0.453592;  %Mass of segment concentrated at midpoint (kg)
+axis1.lengthMass = 3+3.1*0.453592;  %Mass of segment concentrated at midpoint (kg)
 axis1.AB_a = -0.55*scalefactor;                 %Actuator base anchor parallel offset (m)
 axis1.AB_r = -0.17*scalefactor;                  %Actuator base anchor perpendicular offset (m)
 axis1.AT_a = -0.05*scalefactor;                %Actuator tip anchor parallel offset (m)
@@ -20,7 +20,7 @@ axis1.AT_y = 0;
 
 axis2.length = 0.6*scalefactor;
 axis2.originMass = 0;
-axis2.lengthMass = 3+4.2*0.453592;
+axis2.lengthMass = 3+3.1*0.453592;
 axis2.AB_a = 0.2*scalefactor;
 axis2.AB_r = 0.10*scalefactor;
 axis2.AT_a = 0.15*scalefactor;
@@ -38,10 +38,10 @@ axis2.AT_y = 0;
 axis3.length = 0.2*scalefactor;
 axis3.originMass = 0;
 axis3.lengthMass = 3;
-axis3.AB_a = 0.1*scalefactor;
-axis3.AB_r = 0.1*scalefactor;
-axis3.AT_a = 0*scalefactor;
-axis3.AT_r = 0.1*scalefactor;
+axis3.AB_a = 0.15*scalefactor-0.0325;
+axis3.AB_r = 0.1*scalefactor+0.02;
+axis3.AT_a = 0*scalefactor-0.04;
+axis3.AT_r = 0.1*scalefactor+0.02;
 axis3.angle = 0;
 axis3.B_x = 0;
 axis3.B_y = 0;
@@ -71,12 +71,12 @@ payload.AT_y = 0;
 
 % Arm array is made of any number of axes, with a payload (zero length axis) at the end
 % (payload is required)
-arm = [axis1 axis2 axis3 payload]; 
+arm = [axis1 axis2 axis3 payload];
 
 %% Variables
 % Angle limits (Length must equal number of non-payload axes)
 angleMins = [-15,-140,-70];
-angleMaxs = [90,-40,70];
+angleMaxs = [90,-40,30];
 
 % Actuator Specs
 %(currently from Progressive Automation PA-09)
@@ -207,8 +207,16 @@ for i = 1:length(angleMins)
     xlabel("Joint Angle (deg)");
     ylabel("Actuator Length (m)");
     
+    [sortedAngles,sortIdx] = sort(angle_list(:,i));
+    sortedLengths = actLength_list(sortIdx,i);
+    [sortedAngles,uniqueIdx,~] = unique(sortedAngles);
+    sortedLengths = sortedLengths(uniqueIdx);
+    d_Lengths = diff(sortedLengths)./diff(sortedAngles)*360;
+    
+    
     disp("Axis "+i+" min extension = "+min(actLength_list(:,i))+" m ( "+(min(actLength_list(:,i))/0.0254)+" in )")
     disp("Axis "+i+" max extension = "+max(actLength_list(:,i))+" m ( "+(max(actLength_list(:,i))/0.0254)+" in )")
+    disp("Axis "+i+" max slope = "+max(abs(d_Lengths))+" m/rev ( "+(max(abs(d_Lengths))/0.0254)+" in/rev )")
     
     %fixed+stroke = min
     %stroke = min-fixed
@@ -247,15 +255,21 @@ end
 
 figure(1);
 hold on
+j = boundary(endPosList,1);
+plot(endPosList(j,1),endPosList(j,2),"c")
+[x_c,y_c] = centroid(polyshape(endPosList(j,1),endPosList(j,2)));
+[minDist,closestIdx] = min(sqrt((x_c-endPosList(:,1)).^2 + (y_c-endPosList(:,2)).^2 + (0.0001)*(-90-(achievableAngle_list(:,1)+achievableAngle_list(:,2)+achievableAngle_list(:,3))).^2));
+
 % [arm1,~] = forwardKinematics(arm, [angleMaxs(1) angleMins(2) -angleMaxs(1)-angleMins(2)-90]);
-[arm1,~] = forwardKinematics(arm, (angleMaxs+angleMins)/2);
+[arm1,~] = forwardKinematics(arm, achievableAngle_list(closestIdx,:));
 drawArm(arm1)
 % [arm1,~] = forwardKinematics(arm, angleMaxs);
 % drawArm(arm1)
 % [arm1,~] = forwardKinematics(arm, angleMins);
 % drawArm(arm1)
-j = boundary(endPosList,1);
-plot(endPosList(j,1),endPosList(j,2))
+
+
+plot(x_c,y_c,"cx")
 
 
 %% surface

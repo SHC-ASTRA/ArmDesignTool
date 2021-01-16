@@ -7,6 +7,9 @@ for axis = arm
 end
 
 if(linkCount ~= length(angles))
+    for axis = arm
+       disp(axis);
+    end
     error("Length of angle array must equal number of non-zero-length arm segments")
     return
 end

@@ -26,7 +26,7 @@ for i = 1:length(arm)
         end
     end
 end
-xlim([-0.75 1.75])
+xlim([-2 2])
 axis equal
 end
 
